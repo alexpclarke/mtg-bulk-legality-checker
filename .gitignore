@@ -1,0 +1,4 @@
+.git
+data*.json
+filtered_cards.csv
+bulk-cards-*.csv
