@@ -1,0 +1,14 @@
+{
+  "name": "mtg-bulk-legality-checker",
+  "version": "1.0.0",
+  "description": "Static Vue app for checking MTG deck legality against bulk CSV data.",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'Static build, nothing to do.'",
+    "predeploy": "cp index.html 404.html",
+    "deploy": "gh-pages -d ."
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}

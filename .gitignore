@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Build output
+/dist/
+/.cache/
+
+# Local env files
+.env
+.env.*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac system files
+Icon?
+
+# GitHub Pages deployment
+.gh-pages/
+
+# Misc
+*.local
+
+# Ignore 404.html if generated for deployment
+404.html
+
+# Existing project ignores
+.git
+data*.json
+filtered_cards.csv
+bulk-cards-*.csv
