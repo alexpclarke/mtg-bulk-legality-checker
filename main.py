@@ -1,16 +1,23 @@
+import glob
 import re
+
 import pandas
 import requests
-import glob
+
 
 def format_timestamp( timestamp ):
   pattern = re.compile( r"(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*" )
   match = pattern.match(timestamp)
-  if match:
+  if match: 
     year, month, day, hour, minute, second = match.groups()
     return "{:04}{:02}{:02}{:02}{:02}{:02}".format(int(year), int(month), int(day), int(hour), int(minute), int(second))
   else:
     raise ValueError( "Invalid timestamp format" )
+
+import json
+
+# Prompt for JSON file path
+json_path = input("Enter path to Scryfall JSON file (leave blank to fetch from Scryfall API): ").strip()
 
 # Determine the URI to download the data from
 default_cards_uri = "https://api.scryfall.com/bulk-data/default-cards"
@@ -23,12 +30,18 @@ if glob.glob(output_filename):
   df = pandas.read_csv(output_filename, index_col='Name')
   legal_cards_by_name = df['Legality'].to_dict()
 else:
-  download_uri = default_cards_response.json()['download_uri']
-  print("Data URI: " + download_uri)
-  print("Downloading...")
-  download_response = requests.get(download_uri)
-  data = download_response.json()
-  print("Downloaded " + str(len(data)) + " records")
+  if json_path:
+    print(f"Loading card data from {json_path}...")
+    with open(json_path, "r", encoding="utf-8") as f:
+      data = json.load(f)
+    print("Loaded " + str(len(data)) + " records from JSON file")
+  else:
+    download_uri = default_cards_response.json()['download_uri']
+    print("Data URI: " + download_uri)
+    print("Downloading...")
+    download_response = requests.get(download_uri)
+    data = download_response.json()
+    print("Downloaded " + str(len(data)) + " records")
 
   cards_by_oracle_id = dict()
   for obj in data:
@@ -155,7 +168,7 @@ else:
     legal_cards_by_oracle_id[oracle_id] = "Legal"
 
   # For each name in oracle_id_by_name, add that card's name, oracle_id, and legality status to a csv file sorted by name
-  legal_cards_by_name = dict()
+  legal_cards_by_name = dict() 
   rows = list()
   for name, oracle_id in oracle_id_by_name.items():
     legality = legal_cards_by_oracle_id.get(oracle_id)
@@ -164,5 +177,5 @@ else:
   rows.sort( key=lambda x: x[0] )
   df = pandas.DataFrame( rows, columns=['Name', 'Oracle ID', 'Legality'] )
   df.set_index('Name', inplace=True)
-  df.to_csv( "data_files/" + output_filename )
-  print("Wrote legality data to data_files/" + output_filename)
+  df.to_csv( "src/data_files/" + output_filename )
+  print("Wrote legality data to src/data_files/" + output_filename)
