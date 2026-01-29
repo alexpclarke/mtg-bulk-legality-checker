@@ -18,28 +18,25 @@ A static Vue.js app to check the legality of Magic: The Gathering decklists agai
 
 ## Local Development
 
-You can use any static server, e.g.:
+To start the dev server and always use the latest CSV file list:
 
 ```
-npx serve .
+npm run dev
 ```
 
-Or just open `index.html` directly in your browser.
+Or just open `index.html` directly in your browser (after running `npm run generate-manifest` to update the file list).
 
 ## Deploying to GitHub Pages
 
-1. Commit all your changes to git.
-2. Install the deployment tool (if not already):
-   ```
-   npm install gh-pages --save-dev
-   ```
-3. Copy `index.html` to `404.html` (for SPA routing):
-   ```
-   npm run predeploy
-   ```
-4. Deploy to GitHub Pages:
-   ```
-   npm run deploy
-   ```
-5. In your GitHub repository settings, set GitHub Pages source to the `gh-pages` branch.
-6. Your app will be live at `https://<your-username>.github.io/<repo-name>`.
+To build and deploy (including updating the CSV file list):
+
+```
+npm run build-and-deploy
+```
+
+This will:
+- Generate the CSV file manifest (data_files/index.json)
+- Copy `index.html` to `404.html` (for SPA routing)
+- Deploy to GitHub Pages
+
+In your GitHub repository settings, set GitHub Pages source to the `gh-pages` branch. Your app will be live at `https://<your-username>.github.io/<repo-name>`.

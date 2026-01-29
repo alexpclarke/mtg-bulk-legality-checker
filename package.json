@@ -6,7 +6,10 @@
     "start": "npx serve .",
     "build": "echo 'Static build, nothing to do.'",
     "predeploy": "cp index.html 404.html",
-    "deploy": "gh-pages -d ."
+    "deploy": "gh-pages -d .",
+    "generate-manifest": "node generate-data-manifest.js",
+    "dev": "npm run generate-manifest && npx serve .",
+    "build-and-deploy": "npm run generate-manifest && npm run predeploy && npm run deploy"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0"

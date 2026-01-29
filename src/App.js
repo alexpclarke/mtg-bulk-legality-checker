@@ -15,19 +15,22 @@ export default {
   },
   methods: {
     async fetchCsvFiles() {
-      // List available CSV files in data_files (static, since no backend)
-      this.csvFiles = [
-        'bulk-cards-20260127221108.csv',
-        'bulk-cards-20260129100712.csv',
-        'bulk-cards-ECL.csv',
-      ];
+      // Fetch the list of CSV files from the generated manifest
+      try {
+        const res = await fetch('data_files/index.json');
+        if (!res.ok) throw new Error('Could not load data_files/index.json');
+        this.csvFiles = await res.json();
+      } catch (e) {
+        this.csvFiles = [];
+        this.error = 'Could not load CSV file list.';
+      }
     },
     async loadCsv() {
       if (!this.selectedFile) return;
       this.loading = true;
       this.error = '';
       try {
-        const res = await fetch(`/data_files/${this.selectedFile}`);
+        const res = await fetch(`data_files/${this.selectedFile}`);
         if (!res.ok) throw new Error('Failed to load CSV');
         const text = await res.text();
         this.csvData = this.parseCsv(text);
