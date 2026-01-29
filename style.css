@@ -1,0 +1,56 @@
+body {
+  font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+  background: #f7f9fa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#app {
+  max-width: 700px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 2rem 1.5rem;
+}
+
+h1, h2, h3 {
+  color: #2d3a4a;
+  margin-top: 0;
+}
+
+input, select, button {
+  font: inherit;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+button {
+  background: #4fc3f7;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: rgb(30.2173913043, 178.3695652174, 244.7826086957);
+}
+
+@media (max-width: 600px) {
+  #app {
+    padding: 1rem 0.5rem;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  input, select, button {
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
