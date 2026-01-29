@@ -12,6 +12,11 @@ def format_timestamp( timestamp ):
   else:
     raise ValueError( "Invalid timestamp format" )
 
+import json
+
+# Prompt for JSON file path
+json_path = input("Enter path to Scryfall JSON file (leave blank to fetch from Scryfall API): ").strip()
+
 # Determine the URI to download the data from
 default_cards_uri = "https://api.scryfall.com/bulk-data/default-cards"
 default_cards_response = requests.get(default_cards_uri)
@@ -23,12 +28,18 @@ if glob.glob(output_filename):
   df = pandas.read_csv(output_filename, index_col='Name')
   legal_cards_by_name = df['Legality'].to_dict()
 else:
-  download_uri = default_cards_response.json()['download_uri']
-  print("Data URI: " + download_uri)
-  print("Downloading...")
-  download_response = requests.get(download_uri)
-  data = download_response.json()
-  print("Downloaded " + str(len(data)) + " records")
+  if json_path:
+    print(f"Loading card data from {json_path}...")
+    with open(json_path, "r", encoding="utf-8") as f:
+      data = json.load(f)
+    print("Loaded " + str(len(data)) + " records from JSON file")
+  else:
+    download_uri = default_cards_response.json()['download_uri']
+    print("Data URI: " + download_uri)
+    print("Downloading...")
+    download_response = requests.get(download_uri)
+    data = download_response.json()
+    print("Downloaded " + str(len(data)) + " records")
 
   cards_by_oracle_id = dict()
   for obj in data:

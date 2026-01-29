@@ -119,6 +119,16 @@ export default {
   template: `
     <div class="container">
       <h1>MTG Bulk Legality Checker</h1>
+      <div class="instructions">
+        <strong>How to get your decklist from Moxfield:</strong>
+        <ol>
+          <li>Enter your decklist into Moxfield</li>
+          <li>Click <b>More</b></li>
+          <li>Click <b>Export</b></li>
+          <li>Click <b>Copy Plain Text</b></li>
+          <li>Paste it as is in the box below</li>
+        </ol>
+      </div>
       <div class="section">
         <label for="csv">Select Data File:</label>
         <select v-model="selectedFile" @change="loadCsv">
