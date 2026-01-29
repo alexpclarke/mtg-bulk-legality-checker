@@ -17,7 +17,7 @@ export default {
     async fetchCsvFiles() {
       // Fetch the list of CSV files from the generated manifest
       try {
-        const res = await fetch('data_files/index.json');
+        const res = await fetch('./data_files/index.json');
         if (!res.ok) throw new Error('Could not load data_files/index.json');
         this.csvFiles = await res.json();
       } catch (e) {
@@ -30,7 +30,7 @@ export default {
       this.loading = true;
       this.error = '';
       try {
-        const res = await fetch(`data_files/${this.selectedFile}`);
+        const res = await fetch(`./data_files/${this.selectedFile}`);
         if (!res.ok) throw new Error('Failed to load CSV');
         const text = await res.text();
         this.csvData = this.parseCsv(text);
