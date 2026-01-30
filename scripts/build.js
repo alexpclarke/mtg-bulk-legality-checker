@@ -52,6 +52,11 @@ function main() {
     process.exit(1);
   }
 
+  // Copy CNAME if it exists (after dist is created and populated)
+  if (fs.existsSync('CNAME')) {
+    copyFile('CNAME', path.join(DIST, 'CNAME'));
+  }
+
   console.log('Build complete. Output in dist/');
 }
 
