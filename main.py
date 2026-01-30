@@ -53,17 +53,18 @@ else:
       continue
     if obj['border_color'] == 'gold':
       continue
-    type_line = obj.get('type_line')
-    if type_line is None:
+    # Layout filtering
+    layout = obj.get('layout')
+    exclude_layouts = {
+      'art_series', 'planar', 'scheme', 'vanguard', 'token', 'double_faced_token', 'emblem'
+    }
+    if layout in exclude_layouts:
       continue
-    # Filter out tokens
-    if 'Token' in type_line:
-      continue
-    # Filter out art cards and non-card objects
-    if type_line == "Card" or type_line == "Card // Card":
-      continue
-    # Filter out Emblems
-    if 'Emblem' in type_line:
+    accept_layouts = {
+      'normal', 'split', 'flip', 'transform', 'modal_dfc', 'meld', 'leveler', 'class', 'case', 'saga', 'adventure', 'mutate', 'prototype', 'battle', 'augment', 'host', 'reversible_card'
+    }
+    if layout not in accept_layouts:
+      print(f"Warning: Excluding card '{obj.get('name')}' with unknown layout '{layout}'")
       continue
     # Filter out objecets with no oracle_id
     oracle_id = obj.get('oracle_id')
@@ -82,7 +83,19 @@ else:
     # Map names to oracle_ids
     for card in cards:
       card_faces = card.get('card_faces')
+      layout = card.get('layout')
       if card_faces is not None and len(card_faces) > 1:
+        if layout == 'split':
+          # For split cards, join all face names with ' / '
+          face_names = [face.get('name') for face in card_faces if face.get('name')]
+          if face_names:
+            split_name = '/'.join(face_names)
+            if split_name not in oracle_id_by_name:
+              oracle_id_by_name[split_name] = oracle_id
+            elif oracle_id_by_name[split_name] != oracle_id:
+              print("Warning: Collision for split name " + split_name + ": oracle_ids " + oracle_id_by_name[split_name] + " and " + oracle_id)
+            continue
+        # Otherwise, just use the front face name/flavor_name as before
         front_face = card_faces[0]
         front_face_flavor_name = front_face.get('flavor_name')
         if front_face_flavor_name is not None:
