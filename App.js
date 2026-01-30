@@ -136,7 +136,7 @@ export default {
         <label for="csv">Select Data File:</label>
         <select v-model="selectedFile" @change="loadCsv">
           <option value="" disabled>Select a file</option>
-          <option v-for="f in csvFiles" :key="f" :value="f">{{ f }}</option>
+          <option v-for="f in csvFiles" :key="f" :value="f">{{ f.replace(/\.csv$/, '') }}</option>
         </select>
       </div>
       <div class="section">
