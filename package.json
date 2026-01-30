@@ -4,8 +4,9 @@
   "description": "Build script for static dist output.",
   "scripts": {
     "build": "node scripts/build.js",
-    "sass": "npx sass src/style.sass dist/style.css",
-    "deploy": "npm run build && npx gh-pages -d dist"
+    "deploy": "npm run build && npx gh-pages -d dist",
+    "clean": "rm -rf dist",
+    "fetch": "python3 scripts/main.py"
   },
   "devDependencies": {
     "sass": "^1.69.0",

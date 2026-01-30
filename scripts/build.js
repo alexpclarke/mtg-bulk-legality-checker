@@ -20,10 +20,16 @@ function main() {
   fs.mkdirSync(DIST);
 
   // Copy index.html, update paths
-  let html = fs.readFileSync('index.html', 'utf8');
+  let html = fs.readFileSync(path.join(SRC, 'index.html'), 'utf8');
   html = html.replace('./src/style.css', './style.css')
              .replace('./src/main.js', './main.js');
   fs.writeFileSync(path.join(DIST, 'index.html'), html);
+
+  // Copy CNAME if it exists in src
+  const cnameSrc = path.join(SRC, 'CNAME');
+  if (fs.existsSync(cnameSrc)) {
+    copyFile(cnameSrc, path.join(DIST, 'CNAME'));
+  }
 
 
   // Copy JS

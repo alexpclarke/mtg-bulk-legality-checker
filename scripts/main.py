@@ -1,5 +1,6 @@
 import glob
 import re
+
 import pandas
 import requests
 
@@ -88,7 +89,7 @@ else:
           # For split cards, join all face names with ' / '
           face_names = [face.get('name') for face in card_faces if face.get('name')]
           if face_names:
-            split_name = '/'.join(face_names)
+            split_name = ' / '.join(face_names)
             if split_name not in oracle_id_by_name:
               oracle_id_by_name[split_name] = oracle_id
             elif oracle_id_by_name[split_name] != oracle_id:
@@ -189,5 +190,9 @@ else:
   rows.sort( key=lambda x: x[0] )
   df = pandas.DataFrame( rows, columns=['Name', 'Oracle ID', 'Legality'] )
   df.set_index('Name', inplace=True)
-  df.to_csv( "src/data_files/" + output_filename )
-  print("Wrote legality data to src/data_files/" + output_filename)
+  import os
+  output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src', 'data_files')
+  os.makedirs(output_dir, exist_ok=True)
+  output_path = os.path.join(output_dir, output_filename)
+  df.to_csv(output_path)
+  print("Wrote legality data to " + output_path)
