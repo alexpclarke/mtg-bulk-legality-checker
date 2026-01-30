@@ -116,7 +116,7 @@ export default {
       this.results = illegal.length === 0 ? 'all legal' : illegal;
     },
     scryfallUrl(oracle_id) {
-      return `https://scryfall.com/card/${oracle_id}`;
+      return `https://scryfall.com/search?q=oracleid%3A${oracle_id}`;
     },
   },
   template: `
