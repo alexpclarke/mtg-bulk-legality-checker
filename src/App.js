@@ -8,6 +8,7 @@ export default {
       results: null,
       loading: false,
       error: '',
+      checkSideboard: false,
     };
   },
   mounted() {
@@ -87,23 +88,29 @@ export default {
     checkLegality() {
       if (!this.decklist || !this.csvData) return;
       const lines = this.decklist.split(/\r?\n/);
-      // Remove sideboard and commander
       let main = [];
+      let sideboard = [];
       let foundSideboard = false;
       for (let line of lines) {
         if (/^sideboard[:]?/i.test(line)) {
           foundSideboard = true;
           continue;
         }
-        if (foundSideboard) continue;
         if (line.trim() === '') continue;
-        main.push(line);
+        if (foundSideboard) {
+          sideboard.push(line);
+        } else {
+          main.push(line);
+        }
       }
-      // Remove last non-empty line (commander)
+      // Remove last non-empty line (commander) from main
       while (main.length && main[main.length-1].trim() === '') main.pop();
       if (main.length) main.pop();
       // Parse card names
-      const cards = main.map(l => l.replace(/^\d+x?\s+/i, '').trim()).filter(Boolean);
+      let cards = main.map(l => l.replace(/^\d+x?\s+/i, '').trim()).filter(Boolean);
+      if (this.checkSideboard) {
+        cards = cards.concat(sideboard.map(l => l.replace(/^\d+x?\s+/i, '').trim()).filter(Boolean));
+      }
       const illegal = [];
       for (let card of cards) {
         const entry = this.csvData[card.toLowerCase()];
@@ -142,6 +149,10 @@ export default {
       <div class="section">
         <label for="decklist">Paste Decklist:</label>
         <textarea v-model="decklist" rows="15" placeholder="Paste your decklist here..."></textarea>
+      </div>
+      <div class="section">
+        <input type="checkbox" id="checkSideboard" v-model="checkSideboard">
+        <label for="checkSideboard">Check sideboard</label>
       </div>
       <button :disabled="!selectedFile || !decklist || loading" @click="checkLegality">Check Legality</button>
       <div v-if="loading">Loading data...</div>
