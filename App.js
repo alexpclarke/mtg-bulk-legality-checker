@@ -128,48 +128,64 @@ export default {
   },
   template: `
     <div class="container">
-      <h1>MTG Bulk Legality Checker</h1>
-      <div class="instructions">
-        <strong>How to get your decklist from Moxfield:</strong>
-        <ol>
-          <li>Enter your decklist into Moxfield</li>
-          <li>Click <b>More</b></li>
-          <li>Click <b>Export</b></li>
-          <li>Click <b>Copy Plain Text</b></li>
-          <li>Paste it as is in the box below</li>
-        </ol>
-      </div>
-      <div class="section">
-        <label for="csv">Select Data File:</label>
-        <select v-model="selectedFile" @change="loadCsv">
-          <option value="" disabled>Select a file</option>
-          <option v-for="f in csvFiles" :key="f" :value="f">{{ f.replace(/\.csv$/, '') }}</option>
-        </select>
-      </div>
-      <div class="section">
-        <label for="decklist">Paste Decklist:</label>
-        <textarea v-model="decklist" rows="15" placeholder="Paste your decklist here..."></textarea>
-      </div>
-      <div class="section">
-        <input type="checkbox" id="checkSideboard" v-model="checkSideboard">
-        <label for="checkSideboard">Check sideboard</label>
-      </div>
-      <button :disabled="!selectedFile || !decklist || loading" @click="checkLegality">Check Legality</button>
-      <div v-if="loading">Loading data...</div>
-      <div v-if="error" class="error">{{ error }}</div>
-      <div v-if="results">
-        <div v-if="results === 'all legal'" class="legal">All legal</div>
-        <div v-else>
-          <h2>Illegal Cards</h2>
-          <ul>
-            <li v-for="c in results" :key="c.name">
-              <span v-if="c.oracle_id">
-                <a :href="scryfallUrl(c.oracle_id)" target="_blank">{{ c.name }}</a>
-              </span>
-              <span v-else>{{ c.name }}</span>
-              <span class="reason">({{ c.reason }})</span>
-            </li>
-          </ul>
+      <div class="box">
+        <h1 class="title is-3 has-text-centered">MTG Bulk Legality Checker</h1>
+        <div class="notification is-info">
+          <strong>How to get your decklist from Moxfield:</strong>
+          <ol class="ml-4">
+            <li>Enter your decklist into Moxfield</li>
+            <li>Click <b>More</b></li>
+            <li>Click <b>Export</b></li>
+            <li>Click <b>Copy Plain Text</b></li>
+            <li>Paste it as is in the box below</li>
+          </ol>
+        </div>
+        <div class="field">
+          <label class="label" for="csv">Select Data File:</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select v-model="selectedFile" @change="loadCsv">
+                <option value="" disabled>Select a file</option>
+                <option v-for="f in csvFiles" :key="f" :value="f">{{ f.replace(/\.csv$/, '') }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="decklist">Paste Decklist:</label>
+          <div class="control">
+            <textarea class="textarea" v-model="decklist" rows="15" placeholder="Paste your decklist here..."></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <label class="checkbox" for="checkSideboard">
+              <input type="checkbox" id="checkSideboard" v-model="checkSideboard">
+              Check sideboard
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-primary is-fullwidth" :disabled="!selectedFile || !decklist || loading" @click="checkLegality">Check Legality</button>
+          </div>
+        </div>
+        <div v-if="loading" class="has-text-centered">Loading data...</div>
+        <div v-if="error" class="error">{{ error }}</div>
+        <div v-if="results">
+          <div v-if="results === 'all legal'" class="legal">All legal</div>
+          <div v-else>
+            <h2 class="subtitle is-5">Illegal Cards</h2>
+            <ul>
+              <li v-for="c in results" :key="c.name">
+                <span v-if="c.oracle_id">
+                  <a :href="scryfallUrl(c.oracle_id)" target="_blank">{{ c.name }}</a>
+                </span>
+                <span v-else>{{ c.name }}</span>
+                <span class="reason">({{ c.reason }})</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
